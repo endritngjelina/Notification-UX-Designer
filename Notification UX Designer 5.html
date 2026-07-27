@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro Notification Designer | Google-Level UX</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #8b5cf6;
+            --accent: #ec4899;
+            --dark: #1e293b;
+            --darker: #0f172a;
+            --light: #f8fafc;
+            --gray: #94a3b8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --glass: rgba(255, 255, 255, 0.1);
+            --glass-dark: rgba(15, 23, 42, 0.7);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--darker), #1e293b);
+            color: var(--light);
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding: 2rem;
+            position: relative;
+        }
+
+        /* Background effects */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            opacity: 0.3;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+            10% { opacity: 0.4; }
+            90% { opacity: 0.4; }
+            100% { transform: translateY(-20vh) scale(1.2); opacity: 0; }
+        }
+
+        /* Header styles */
+        .header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.025em;
+        }
+
+        .header p {
+            color: var(--gray);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .header::after {
+            content: '';
+            display: block;
+            width: 120px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            border-radius: 2px;
+            margin: 1.5rem auto 0;
+        }
+
+        /* Main container */
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 2.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Designer panel */
+        .designer-panel {
+            background: var(--glass-dark);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 2.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .designer-panel::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            left: -100px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(20px);
+        }
+
+        .designer-panel::after {
+            content: '';
+            position: absolute;
+            bottom: -80px;
+            right: -80px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(20px);
+        }
+
+        .panel-header {
+            margin-bottom: 2rem;
+        }
+
+        .panel-header h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .panel-header h2 i {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .panel-header p {
+            color: var(--gray);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Form styles */
+        .form-group {
+            margin-bottom: 1.75rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+            color: var(--light);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.9rem 1.2rem;
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--light);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* Icon selector */
+        .icon-selector {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 0.8rem;
+        }
+
+        .icon-option {
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: var(--transition);
+            background: rgba(15, 23, 42, 0.6);
+            border: 2px solid transparent;
+        }
+
+        .icon-option:hover {
+            transform: translateY(-3px);
+            background: rgba(99, 102, 241, 0.2);
+            border-color: var(--primary);
+        }
+
+        .icon-option.selected {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-color: var(--primary);
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Color picker */
+        .color-picker-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .color-option {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            border: 2px solid transparent;
+        }
+
+        .color-option:hover {
+            transform: scale(1.15);
+        }
+
+        .color-option.selected::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        /* Advanced options */
+        .advanced-options {
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .advanced-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.2rem;
+        }
+
+        .advanced-header h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .pro-badge {
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .toggle-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .toggle-label {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.1);
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background: var(--gray);
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(24px);
+            background: white;
+        }
+
+        /* Preview panel */
+        .preview-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .phone-mockup {
+            background: #0f172a;
+            border-radius: 40px;
+            padding: 20px 10px;
+            position: relative;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            overflow: hidden;
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 680px;
+            background: linear-gradient(160deg, #1e293b, #0f172a);
+            border-radius: 32px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 1.5rem;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .status-icons {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .notification-area {
+            padding: 1.5rem;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .notification {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 18px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .notification::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+            z-index: -1;
+        }
+
+        .notification:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .notification-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .notification-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .notification-meta {
+            flex: 1;
+        }
+
+        .app-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--light);
+            margin-bottom: 0.2rem;
+        }
+
+        .time-ago {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .notification-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--light);
+            margin-bottom: 0.5rem;
+        }
+
+        .notification-body {
+            font-size: 0.95rem;
+            color: var(--gray);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .notification-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .action-button {
+            flex: 1;
+            padding: 0.7rem 1rem;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--light);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            text-align: center;
+        }
+
+        .action-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .action-button.primary {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            font-weight: 600;
+        }
+
+        .action-button.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Preview controls */
+        .preview-controls {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .control-button {
+            flex: 1;
+            padding: 1rem;
+            border-radius: 14px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            min-width: 160px;
+            font-size: 1rem;
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .control-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+        }
+
+        .control-button:active {
+            transform: translateY(1px);
+        }
+
+        .control-button.secondary {
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: none;
+        }
+
+        .control-button.secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Export panel */
+        .export-panel {
+            background: var(--glass-dark);
+            border-radius: 18px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            display: none;
+        }
+
+        .export-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .export-header h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .export-options {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .export-option {
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--light);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+        }
+
+        .export-option.active {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+        }
+
+        .export-code {
+            background: rgba(15, 23, 42, 0.7);
+            color: var(--light);
+            padding: 1.2rem;
+            border-radius: 14px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin-top: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            line-height: 1.6;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .code-line {
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .comment {
+            color: #94a3b8;
+        }
+
+        .keyword {
+            color: #f472b6;
+        }
+
+        .string {
+            color: #86efac;
+        }
+
+        .function {
+            color: #60a5fa;
+        }
+
+        /* Responsive design */
+        @media (max-width: 1100px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .preview-panel {
+                grid-row: 1;
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            
+            .phone-mockup {
+                width: 380px;
+                margin: 0 auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1.5rem;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .preview-panel {
+                flex-direction: column;
+            }
+            
+            .header h1 {
+                font-size: 2.2rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide-in {
+            animation: slideIn 0.6s ease-out forwards;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.5); }
+            50% { box-shadow: 0 0 0 15px rgba(99, 102, 241, 0); }
+        }
+
+        /* Micro-interactions */
+        .magnetic {
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .magnetic:hover {
+            transform: scale(1.03);
+        }
+
+        .notification {
+            transform-origin: top center;
+        }
+
+        /* Priority indicators */
+        .priority-high {
+            border-left: 4px solid var(--warning);
+        }
+
+        .priority-urgent {
+            border-left: 4px solid var(--danger);
+            animation: pulse 1.5s infinite;
+        }
+
+        /* Floating animations */
+        .floating {
+            animation: floating 6s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Particle background -->
+    <div class="particles" id="particles"></div>
+    
+    <div class="header floating">
+        <h1>Pro Notification Designer</h1>
+        <p>Create stunning mobile notifications with real-time preview and export capabilities. Designed to impress at the highest level.</p>
+    </div>
+    
+    <div class="container">
+        <!-- Designer Panel -->
+        <div class="designer-panel magnetic slide-in">
+            <div class="panel-header">
+                <h2><i class="fas fa-palette"></i> Design Your Notification</h2>
+                <p>Customize every aspect of your notification and see changes in real-time</p>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label><i class="fas fa-mobile-alt"></i> App Name</label>
+                    <input type="text" id="appName" value="InnoApp" placeholder="Enter app name">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-clock"></i> Time Display</label>
+                    <select id="timeDisplay">
+                        <option value="now">now</option>
+                        <option value="1m ago">1m ago</option>
+                        <option value="5m ago">5m ago</option>
+                        <option value="1h ago">1h ago</option>
+                        <option value="Today">Today</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fas fa-icons"></i> App Icon</label>
+                <div class="icon-selector">
+                    <div class="icon-option selected" data-icon="📱">📱</div>
+                    <div class="icon-option" data-icon="📧">📧</div>
+                    <div class="icon-option" data-icon="💬">💬</div>
+                    <div class="icon-option" data-icon="🔔">🔔</div>
+                    <div class="icon-option" data-icon="💰">💰</div>
+                    <div class="icon-option" data-icon="🚀">🚀</div>
+                    <div class="icon-option" data-icon="🎮">🎮</div>
+                    <div class="icon-option" data-icon="🎵">🎵</div>
+                    <div class="icon-option" data-icon="📷">📷</div>
+                    <div class="icon-option" data-icon="🛒">🛒</div>
+                    <div class="icon-option" data-icon="🏆">🏆</div>
+                    <div class="icon-option" data-icon="❤️">❤️</div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fas fa-fill-drip"></i> Icon Color</label>
+                <div class="color-picker-group">
+                    <div class="color-option selected" style="background: #6366f1;" data-color="#6366f1"></div>
+                    <div class="color-option" style="background: #ec4899;" data-color="#ec4899"></div>
+                    <div class="color-option" style="background: #10b981;" data-color="#10b981"></div>
+                    <div class="color-option" style="background: #f59e0b;" data-color="#f59e0b"></div>
+                    <div class="color-option" style="background: #8b5cf6;" data-color="#8b5cf6"></div>
+                    <div class="color-option" style="background: #3b82f6;" data-color="#3b82f6"></div>
+                    <div class="color-option" style="background: #ef4444;" data-color="#ef4444"></div>
+                    <div class="color-option" style="background: #f472b6;" data-color="#f472b6"></div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fas fa-heading"></i> Notification Title</label>
+                    <input type="text" id="notificationTitle" value="New Message Received" placeholder="Enter title">
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fas fa-align-left"></i> Notification Body</label>
+                <textarea id="notificationBody" placeholder="Enter your message...">Hey there! You've received a new message from Alex. Tap to view and respond when you have a moment.</textarea>
+            </div>
+            
+            <!-- Advanced Options -->
+            <div class="advanced-options">
+                <div class="advanced-header">
+                    <h3><i class="fas fa-cogs"></i> Advanced Settings <span class="pro-badge">PRO</span></h3>
+                </div>
+                
+                <div class="toggle-group">
+                    <div class="toggle-label">
+                        <i class="fas fa-bell"></i> Show Action Buttons
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="showActions" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="form-row" id="actionButtonsRow">
+                    <div class="form-group">
+                        <label><i class="fas fa-check-circle"></i> Primary Action</label>
+                        <input type="text" id="primaryAction" value="Reply" placeholder="Action text">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-times-circle"></i> Secondary Action</label>
+                        <input type="text" id="secondaryAction" value="Dismiss" placeholder="Action text">
+                    </div>
+                </div>
+                
+                <div class="toggle-group">
+                    <div class="toggle-label">
+                        <i class="fas fa-exclamation-triangle"></i> Critical Alert
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="criticalAlert">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="toggle-group">
+                    <div class="toggle-label">
+                        <i class="fas fa-layer-group"></i> Grouped Notification
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="groupedNotification">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-arrows-alt-v"></i> Notification Priority</label>
+                    <select id="priority">
+                        <option value="normal">Normal</option>
+                        <option value="high">High</option>
+                        <option value="urgent">Urgent</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Controls -->
+            <div class="preview-controls">
+                <button class="control-button" onclick="previewNotification()">
+                    <i class="fas fa-play-circle"></i> Preview Animation
+                </button>
+                <button class="control-button secondary" onclick="exportCode()">
+                    <i class="fas fa-code"></i> Export Code
+                </button>
+            </div>
+            
+            <!-- Export Panel -->
+            <div class="export-panel" id="exportPanel">
+                <div class="export-header">
+                    <h3><i class="fas fa-file-export"></i> Export Notification</h3>
+                </div>
+                
+                <div class="export-options">
+                    <button class="export-option active" data-lang="swift">Swift</button>
+                    <button class="export-option" data-lang="kotlin">Kotlin</button>
+                    <button class="export-option" data-lang="js">JavaScript</button>
+                </div>
+                
+                <div class="export-code" id="exportCode">
+                    <span class="code-line comment">// Generated iOS Notification Code</span>
+                    <span class="code-line"><span class="keyword">let</span> content = <span class="function">UNMutableNotificationContent</span>()</span>
+                    <span class="code-line">content.title = <span class="string">"New Message"</span></span>
+                    <span class="code-line">content.body = <span class="string">"You have a new message"</span></span>
+                    <span class="code-line">content.sound = .default</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="keyword">let</span> trigger = <span class="function">UNTimeIntervalNotificationTrigger</span>(timeInterval: 5, repeats: false)</span>
+                    <span class="code-line"><span class="keyword">let</span> request = <span class="function">UNNotificationRequest</span>(identifier: <span class="string">"message"</span>, content: content, trigger: trigger)</span>
+                    <span class="code-line"></span>
+                    <span class="code-line"><span class="function">UNUserNotificationCenter</span>.current().add(request)</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Preview Panel -->
+        <div class="preview-panel">
+            <div class="phone-mockup magnetic">
+                <div class="phone-screen">
+                    <div class="status-bar">
+                        <span class="time">9:41 AM</span>
+                        <div class="status-icons">
+                            <span>📶</span>
+                            <span>🔋 92%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="notification-area">
+                        <div class="notification" id="previewNotification">
+                            <div class="notification-header">
+                                <div class="notification-icon" id="previewIcon" style="background: #6366f1;">📱</div>
+                                <div class="notification-meta">
+                                    <div class="app-name" id="previewAppName">InnoApp</div>
+                                    <div class="time-ago" id="previewTime">now</div>
+                                </div>
+                            </div>
+                            <div class="notification-title" id="previewTitle">New Message Received</div>
+                            <div class="notification-body" id="previewBody">Hey there! You've received a new message from Alex. Tap to view and respond when you have a moment.</div>
+                            <div class="notification-actions" id="previewActions">
+                                <button class="action-button" id="previewSecondaryAction">Dismiss</button>
+                                <button class="action-button primary" id="previewPrimaryAction">Reply</button>
+                            </div>
+                        </div>
+                        
+                        <div class="notification">
+                            <div class="notification-header">
+                                <div class="notification-icon" style="background: #10b981;">💰</div>
+                                <div class="notification-meta">
+                                    <div class="app-name">PayApp</div>
+                                    <div class="time-ago">1h ago</div>
+                                </div>
+                            </div>
+                            <div class="notification-title">Payment Received</div>
+                            <div class="notification-body">You've received $150 from Jane Doe for project completion.</div>
+                        </div>
+                        
+                        <div class="notification priority-high">
+                            <div class="notification-header">
+                                <div class="notification-icon" style="background: #f59e0b;">📅</div>
+                                <div class="notification-meta">
+                                    <div class="app-name">Calendar</div>
+                                    <div class="time-ago">Today</div>
+                                </div>
+                            </div>
+                            <div class="notification-title">Meeting in 30 minutes</div>
+                            <div class="notification-body">Team sync meeting starts at 10:00 AM in Conference Room B.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="preview-controls">
+                <button class="control-button pulse" onclick="addSampleNotification()">
+                    <i class="fas fa-plus-circle"></i> Add Sample
+                </button>
+                <button class="control-button secondary" onclick="clearNotifications()">
+                    <i class="fas fa-trash-alt"></i> Clear All
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Create particle background
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random properties
+                const size = Math.random() * 20 + 5;
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                const delay = Math.random() * 15;
+                const duration = 10 + Math.random() * 20;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${posX}%`;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.animationDuration = `${duration}s`;
+                
+                container.appendChild(particle);
+            }
+        }
+        
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            bindEvents();
+            updatePreview();
+        });
+        
+        // Bind event listeners
+        function bindEvents() {
+            // Icon selection
+            document.querySelectorAll('.icon-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.icon-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                    updatePreview();
+                });
+            });
+            
+            // Color selection
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.color-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    this.classList.add('selected');
+                    updatePreview();
+                });
+            });
+            
+            // Form inputs
+            document.querySelectorAll('input, select, textarea').forEach(input => {
+                input.addEventListener('input', updatePreview);
+            });
+            
+            // Toggles
+            document.getElementById('showActions').addEventListener('change', updatePreview);
+            document.getElementById('criticalAlert').addEventListener('change', updatePreview);
+            document.getElementById('groupedNotification').addEventListener('change', updatePreview);
+            document.getElementById('priority').addEventListener('change', updatePreview);
+            
+            // Export options
+            document.querySelectorAll('.export-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.export-option').forEach(opt => {
+                        opt.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                });
+            });
+        }
+        
+        // Update preview
+        function updatePreview() {
+            const appName = document.getElementById('appName').value || 'AppName';
+            const title = document.getElementById('notificationTitle').value || 'Notification Title';
+            const body = document.getElementById('notificationBody').value || 'Notification message content...';
+            const time = document.getElementById('timeDisplay').value;
+            const showActions = document.getElementById('showActions').checked;
+            const primaryAction = document.getElementById('primaryAction').value || 'Action';
+            const secondaryAction = document.getElementById('secondaryAction').value || 'Dismiss';
+            const criticalAlert = document.getElementById('criticalAlert').checked;
+            const priority = document.getElementById('priority').value;
+            
+            // Get selected icon and color
+            const selectedIcon = document.querySelector('.icon-option.selected').dataset.icon;
+            const selectedColor = document.querySelector('.color-option.selected').dataset.color;
+            
+            // Update preview elements
+            document.getElementById('previewAppName').textContent = appName;
+            document.getElementById('previewTitle').textContent = title;
+            document.getElementById('previewBody').textContent = body;
+            document.getElementById('previewTime').textContent = time;
+            document.getElementById('previewIcon').textContent = selectedIcon;
+            document.getElementById('previewIcon').style.background = selectedColor;
+            document.getElementById('previewPrimaryAction').textContent = primaryAction;
+            document.getElementById('previewSecondaryAction').textContent = secondaryAction;
+            
+            // Toggle action buttons
+            document.getElementById('previewActions').style.display = showActions ? 'flex' : 'none';
+            
+            // Handle priority
+            const preview = document.getElementById('previewNotification');
+            preview.classList.remove('priority-high', 'priority-urgent');
+            
+            if (priority === 'high') {
+                preview.classList.add('priority-high');
+            } else if (priority === 'urgent') {
+                preview.classList.add('priority-urgent');
+            }
+            
+            // Critical alert style
+            if (criticalAlert) {
+                preview.style.borderLeft = '4px solid var(--danger)';
+                preview.classList.add('priority-urgent');
+            }
+        }
+        
+        // Preview animation
+        function previewNotification() {
+            const notification = document.getElementById('previewNotification');
+            
+            // Animation effect
+            notification.style.animation = 'none';
+            setTimeout(() => {
+                notification.style.animation = 'slideIn 0.6s ease-out';
+            }, 10);
+        }
+        
+        // Export code
+        function exportCode() {
+            const panel = document.getElementById('exportPanel');
+            panel.style.display = 'block';
+            
+            // Scroll to export panel
+            panel.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Add sample notification
+        function addSampleNotification() {
+            const area = document.querySelector('.notification-area');
+            const notifications = [
+                {
+                    icon: '💰',
+                    color: '#10b981',
+                    app: 'FinanceApp',
+                    time: '2m ago',
+                    title: 'Salary Deposited',
+                    body: 'Your monthly salary of $5,200 has been deposited to your account.'
+                },
+                {
+                    icon: '🏃',
+                    color: '#8b5cf6',
+                    app: 'Fitness',
+                    time: '5m ago',
+                    title: 'Daily Goal Achieved',
+                    body: 'Congratulations! You\'ve reached your daily step goal of 10,000 steps.'
+                },
+                {
+                    icon: '📱',
+                    color: '#3b82f6',
+                    app: 'System',
+                    time: '10m ago',
+                    title: 'Update Available',
+                    body: 'A new system update is ready to install. Tap to begin the update process.'
+                }
+            ];
+            
+            const randomNotif = notifications[Math.floor(Math.random() * notifications.length)];
+            
+            const notification = document.createElement('div');
+            notification.className = 'notification slide-in';
+            notification.innerHTML = `
+                <div class="notification-header">
+                    <div class="notification-icon" style="background: ${randomNotif.color};">${randomNotif.icon}</div>
+                    <div class="notification-meta">
+                        <div class="app-name">${randomNotif.app}</div>
+                        <div class="time-ago">${randomNotif.time}</div>
+                    </div>
+                </div>
+                <div class="notification-title">${randomNotif.title}</div>
+                <div class="notification-body">${randomNotif.body}</div>
+            `;
+            
+            area.insertBefore(notification, area.firstChild);
+        }
+        
+        // Clear notifications
+        function clearNotifications() {
+            const area = document.querySelector('.notification-area');
+            const notifications = area.querySelectorAll('.notification');
+            
+            notifications.forEach((notif, index) => {
+                if (notif.id !== 'previewNotification') {
+                    setTimeout(() => {
+                        notif.style.animation = 'slideIn 0.4s ease-out reverse';
+                        setTimeout(() => {
+                            notif.remove();
+                        }, 400);
+                    }, index * 100);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
