@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification UX Designer Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: 0 32px 64px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 32px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 0;
+            min-height: 800px;
+        }
+
+        .designer-panel {
+            padding: 40px;
+            background: #fafbfc;
+        }
+
+        .phone-preview {
+            background: linear-gradient(145deg, #2c3e50, #34495e);
+            padding: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .form-section {
+            margin-bottom: 32px;
+        }
+
+        .form-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 16px;
+            color: #2c3e50;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .form-group input[type="text"], 
+        .form-group textarea, 
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e1e8ed;
+            border-radius: 12px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus, 
+        .form-group textarea:focus, 
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .color-option.active {
+            border-color: #2c3e50;
+            box-shadow: 0 0 0 2px #667eea;
+        }
+
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .icon-option {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: #f8f9fa;
+            border: 2px solid #e1e8ed;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            transition: all 0.2s ease;
+        }
+
+        .icon-option:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        .icon-option.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .style-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .style-option {
+            padding: 16px;
+            border: 2px solid #e1e8ed;
+            border-radius: 12px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .style-option:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .style-option.active {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .phone-mockup {
+            width: 280px;
+            height: 580px;
+            background: #000;
+            border-radius: 32px;
+            padding: 8px;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #1a1a1a 0%, #2d2d2d 100%);
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .status-bar {
+            height: 44px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .notifications-area {
+            padding: 20px;
+            max-height: 480px;
+            overflow-y: auto;
+        }
+
+        .notification {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.4s ease-out;
+            transition: all 0.3s ease;
+        }
+
+        .notification:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .notification-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 4px;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            font-size: 14px;
+            color: #2c3e50;
+            line-height: 1.3;
+        }
+
+        .notification-time {
+            font-size: 12px;
+            color: #7f8c8d;
+            flex-shrink: 0;
+            margin-left: 8px;
+        }
+
+        .notification-body {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+
+        .notification-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .notification-action {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .action-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .action-secondary {
+            background: #f1f3f4;
+            color: #5f6368;
+        }
+
+        .action-primary:hover {
+            background: #5a6fd8;
+        }
+
+        .action-secondary:hover {
+            background: #e8eaed;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .preview-controls {
+            margin-top: 24px;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .control-btn {
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .control-btn.primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .control-btn.secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .advanced-options {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 24px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+            margin-left: 12px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #667eea;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .metrics-panel {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .metric-label {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .phone-preview {
+                order: -1;
+                padding: 20px;
+            }
+            
+            .phone-mockup {
+                width: 240px;
+                height: 500px;
+            }
+        }
+
+        .sample-notifications {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Notification UX Designer Pro</h1>
+            <p>Professional-grade notification design tool for mobile applications</p>
+        </div>
+
+        <div class="main-content">
+            <div class="designer-panel">
+                <div class="form-section">
+                    <h3>📱 App Information</h3>
+                    <div class="form-group">
+                        <label for="appName">App Name</label>
+                        <input type="text" id="appName" placeholder="Enter app name" value="Instagram">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>🎨 Visual Design</h3>
+                    <div class="form-group">
+                        <label>Notification Icon</label>
+                        <div class="icon-grid">
+                            <div class="icon-option active" data-icon="📷">📷</div>
+                            <div class="icon-option" data-icon="💬">💬</div>
+                            <div class="icon-option" data-icon="❤️">❤️</div>
+                            <div class="icon-option" data-icon="🔔">🔔</div>
+                            <div class="icon-option" data-icon="⭐">⭐</div>
+                            <div class="icon-option" data-icon="🚀">🚀</div>
+                            <div class="icon-option" data-icon="💡">💡</div>
+                            <div class="icon-option" data-icon="🎵">🎵</div>
+                            <div class="icon-option" data-icon="📧">📧</div>
+                            <div class="icon-option" data-icon="🎯">🎯</div>
+                            <div class="icon-option" data-icon="🛒">🛒</div>
+                            <div class="icon-option" data-icon="🏆">🏆</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Background Color</label>
+                        <div class="color-grid">
+                            <div class="color-option active" style="background: linear-gradient(135deg, #667eea, #764ba2)" data-color="linear-gradient(135deg, #667eea, #764ba2)"></div>
+                            <div class="color-option" style="background: linear-gradient(135deg, #f093fb, #f5576c)" data-color="linear-gradient(135deg, #f093fb, #f5576c)"></div>
+                            <div class="color-option" style="background: linear-gradient(135deg, #4facfe, #00f2fe)" data-color="linear-gradient(135deg, #4facfe, #00f2fe)"></div>
+                            <div class="color-option" style="background: linear-gradient(135deg, #43e97b, #38f9d7)" data-color="linear-gradient(135deg, #43e97b, #38f9d7)"></div>
+                            <div class="color-option" style="background: linear-gradient(135deg, #fa709a, #fee140)" data-color="linear-gradient(135deg, #fa709a, #fee140)"></div>
+                            <div class="color-option" style="background: linear-gradient(135deg, #a8edea, #fed6e3)" data-color="linear-gradient(135deg, #a8edea, #fed6e3)"></div>
+                            <div class="color-option" style="background: #2c3e50" data-color="#2c3e50"></div>
+                            <div class="color-option" style="background: #e74c3c" data-color="#e74c3c"></div>
+                            <div class="color-option" style="background: #3498db" data-color="#3498db"></div>
+                            <div class="color-option" style="background: #2ecc71" data-color="#2ecc71"></div>
+                            <div class="color-option" style="background: #f39c12" data-color="#f39c12"></div>
+                            <div class="color-option" style="background: #9b59b6" data-color="#9b59b6"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Notification Style</label>
+                        <div class="style-options">
+                            <div class="style-option active" data-style="modern">
+                                <strong>Modern</strong><br>
+                                <small>Rounded, glassmorphic</small>
+                            </div>
+                            <div class="style-option" data-style="minimal">
+                                <strong>Minimal</strong><br>
+                                <small>Clean, simple lines</small>
+                            </div>
+                            <div class="style-option" data-style="bold">
+                                <strong>Bold</strong><br>
+                                <small>High contrast, vibrant</small>
+                            </div>
+                            <div class="style-option" data-style="elegant">
+                                <strong>Elegant</strong><br>
+                                <small>Sophisticated shadows</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>✏️ Content</h3>
+                    <div class="form-group">
+                        <label for="notificationTitle">Notification Title</label>
+                        <input type="text" id="notificationTitle" placeholder="Enter notification title" value="New photo from John">
+                    </div>
+                    <div class="form-group">
+                        <label for="notificationBody">Message Body</label>
+                        <textarea id="notificationBody" placeholder="Enter notification message">John shared a new photo from his trip to Paris. Check it out!</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="actionType">Action Buttons</label>
+                        <select id="actionType">
+                            <option value="view-reply">View & Reply</option>
+                            <option value="accept-decline">Accept & Decline</option>
+                            <option value="like-comment">Like & Comment</option>
+                            <option value="open-dismiss">Open & Dismiss</option>
+                            <option value="none">No Actions</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="advanced-options">
+                    <h3>⚙️ Advanced Settings</h3>
+                    <div class="form-group">
+                        <label>
+                            Enable Sound
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="enableSound" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            Enable Vibration
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="enableVibration" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            Show Badge Count
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="showBadge" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="priority">Priority Level</label>
+                        <select id="priority">
+                            <option value="high">High (Immediate)</option>
+                            <option value="normal" selected>Normal</option>
+                            <option value="low">Low (Silent)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="metrics-panel">
+                    <div class="metric-card">
+                        <div class="metric-value" id="engagementRate">87%</div>
+                        <div class="metric-label">Engagement Rate</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="readability">9.2</div>
+                        <div class="metric-label">Readability Score</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="attention">High</div>
+                        <div class="metric-label">Attention Level</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="phone-preview">
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        <div class="status-bar">
+                            <span>9:41</span>
+                            <span>100% 🔋</span>
+                        </div>
+                        <div class="notifications-area" id="notificationsArea">
+                            <!-- Notifications will be rendered here -->
+                        </div>
+                    </div>
+                </div>
+                <div class="preview-controls">
+                    <button class="control-btn primary" onclick="previewNotification()">Preview</button>
+                    <button class="control-btn secondary" onclick="clearNotifications()">Clear</button>
+                    <button class="control-btn secondary" onclick="generateSample()">Sample</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sample notifications data -->
+    <div class="sample-notifications">
+        <div data-sample='{"title": "Sarah liked your photo", "body": "Your sunset photo from yesterday got a like from Sarah.", "icon": "❤️", "actions": "like-comment", "color": "#e74c3c"}'></div>
+        <div data-sample='{"title": "Meeting reminder", "body": "Team standup meeting starts in 15 minutes. Join the video call.", "icon": "🔔", "actions": "open-dismiss", "color": "#3498db"}'></div>
+        <div data-sample='{"title": "New message", "body": "Hey! Are we still on for dinner tonight? Let me know!", "icon": "💬", "actions": "view-reply", "color": "#2ecc71"}'></div>
+        <div data-sample='{"title": "Workout completed", "body": "Great job! You burned 347 calories in today\'s workout.", "icon": "🏆", "actions": "none", "color": "#f39c12"}'></div>
+    </div>
+
+    <script>
+        let currentNotificationId = 0;
+        let selectedIcon = '📷';
+        let selectedColor = 'linear-gradient(135deg, #667eea, #764ba2)';
+        let selectedStyle = 'modern';
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            previewNotification();
+            updateMetrics();
+        });
+
+        function setupEventListeners() {
+            // Icon selection
+            document.querySelectorAll('.icon-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.icon-option').forEach(o => o.classList.remove('active'));
+                    this.classList.add('active');
+                    selectedIcon = this.dataset.icon;
+                    previewNotification();
+                });
+            });
+
+            // Color selection
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.color-option').forEach(o => o.classList.remove('active'));
+                    this.classList.add('active');
+                    selectedColor = this.dataset.color;
+                    previewNotification();
+                });
+            });
+
+            // Style selection
+            document.querySelectorAll('.style-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.style-option').forEach(o => o.classList.remove('active'));
+                    this.classList.add('active');
+                    selectedStyle = this.dataset.style;
+                    previewNotification();
+                });
+            });
+
+            // Input changes
+            ['appName', 'notificationTitle', 'notificationBody', 'actionType', 'priority'].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('input', function() {
+                        previewNotification();
+                        updateMetrics();
+                    });
+                }
+            });
+
+            // Toggle switches
+            ['enableSound', 'enableVibration', 'showBadge'].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('change', updateMetrics);
+                }
+            });
+        }
+
+        function previewNotification() {
+            const appName = document.getElementById('appName').value || 'App';
+            const title = document.getElementById('notificationTitle').value || 'Notification';
+            const body = document.getElementById('notificationBody').value || 'This is a sample notification message.';
+            const actionType = document.getElementById('actionType').value;
+            
+            const notification = createNotificationElement({
+                id: ++currentNotificationId,
+                appName,
+                title,
+                body,
+                icon: selectedIcon,
+                color: selectedColor,
+                style: selectedStyle,
+                actionType,
+                timestamp: new Date()
+            });
+
+            const container = document.getElementById('notificationsArea');
+            container.insertBefore(notification, container.firstChild);
+
+            // Keep only last 3 notifications
+            while (container.children.length > 3) {
+                container.removeChild(container.lastChild);
+            }
+
+            // Simulate notification arrival with animation
+            setTimeout(() => {
+                notification.style.animation = 'slideIn 0.4s ease-out';
+            }, 50);
+        }
+
+        function createNotificationElement(data) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${data.style}`;
+            notification.id = `notification-${data.id}`;
+
+            // Apply style-specific modifications
+            let styleClasses = '';
+            let backgroundStyle = '';
+            
+            switch(data.style) {
+                case 'minimal':
+                    styleClasses = 'minimal-style';
+                    backgroundStyle = 'background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border: 1px solid #e1e8ed;';
+                    break;
+                case 'bold':
+                    styleClasses = 'bold-style';
+                    backgroundStyle = 'background: linear-gradient(135deg, #ff6b6b, #ffa500); color: white;';
+                    break;
+                case 'elegant':
+                    styleClasses = 'elegant-style';
+                    backgroundStyle = 'background: rgba(255,255,255,0.98); box-shadow: 0 16px 40px rgba(0,0,0,0.15);';
+                    break;
+                default:
+                    backgroundStyle = 'background: rgba(255,255,255,0.95); backdrop-filter: blur(20px);';
+            }
+
+            notification.style.cssText += backgroundStyle;
+
+            const time = formatTime(data.timestamp);
+            const actions = getActionButtons(data.actionType, data.style);
+
+            notification.innerHTML = `
+                <div class="notification-icon" style="background: ${data.color}">
+                    ${data.icon}
+                </div>
+                <div class="notification-content">
+                    <div class="notification-header">
+                        <div class="notification-title">${data.title}</div>
+                        <div class="notification-time">${time}</div>
+                    </div>
+                    <div class="notification-body">${data.body}</div>
+                    ${actions}
+                </div>
+            `;
+
+            return notification;
+        }
+
+        function getActionButtons(actionType, style) {
+            if (actionType === 'none') return '';
+
+            const actions = {
+                'view-reply': ['View', 'Reply'],
+                'accept-decline': ['Accept', 'Decline'],
+                'like-comment': ['Like', 'Comment'],
+                'open-dismiss': ['Open', 'Dismiss']
+            };
+
+            const buttonPair = actions[actionType] || ['Action', 'Cancel'];
+            const textColor = style === 'bold' ? 'style="color: rgba(255,255,255,0.9);"' : '';
+
+            return `
+                <div class="notification-actions">
+                    <div class="notification-action action-primary">${buttonPair[0]}</div>
+                    <div class="notification-action action-secondary" ${textColor}>${buttonPair[1]}</div>
+                </div>
+            `;
+        }
+
+        function formatTime(date) {
+            const now = new Date();
+            const diff = Math.floor((now - date) / 1000);
+            
+            if (diff < 60) return 'now';
+            if (diff < 3600) return `${Math.floor(diff / 60)}m`;
+            if (diff < 86400) return `${Math.floor(diff / 3600)}h`;
+            return `${Math.floor(diff / 86400)}d`;
+        }
+
+        function clearNotifications() {
+            document.getElementById('notificationsArea').innerHTML = '';
+        }
+
+        function generateSample() {
+            const samples = document.querySelectorAll('.sample-notifications [data-sample]');
+            const randomSample = samples[Math.floor(Math.random() * samples.length)];
+            const sampleData = JSON.parse(randomSample.dataset.sample);
+            
+            // Update form with sample data
+            document.getElementById('notificationTitle').value = sampleData.title;
+            document.getElementById('notificationBody').value = sampleData.body;
+            document.getElementById('actionType').value = sampleData.actions;
+            
+            // Update selected icon
+            document.querySelectorAll('.icon-option').forEach(option => {
+                option.classList.remove('active');
+                if (option.dataset.icon === sampleData.icon) {
+                    option.classList.add('active');
+                    selectedIcon = sampleData.icon;
+                }
+            });
+            
+            // Update selected color
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.classList.remove('active');
+                if (option.dataset.color === sampleData.color) {
+                    option.classList.add('active');
+                    selectedColor = sampleData.color;
+                }
+            });
+            
+            previewNotification();
+            updateMetrics();
+        }
+
+        function updateMetrics() {
+            const title = document.getElementById('notificationTitle').value;
+            const body = document.getElementById('notificationBody').value;
+            const priority = document.getElementById('priority').value;
+            const hasSound = document.getElementById('enableSound').checked;
+            const hasVibration = document.getElementById('enableVibration').checked;
+            
+            // Calculate engagement rate based on various factors
+            let engagement = 70;
+            if (title.length > 0 && title.length <= 50) engagement += 10;
+            if (body.length > 0 && body.length <= 120) engagement += 10;
+            if (priority === 'high') engagement += 5;
+            if (hasSound) engagement += 3;
+            if (hasVibration) engagement += 2;
+            
+            engagement = Math.min(engagement, 98);
+            document.getElementById('engagementRate').textContent = `${engagement}%`;
+            
+            // Calculate readability score
+            const avgWordsPerSentence = (title.split(' ').length + body.split(' ').length) / 
+                                      (title.split('.').length + body.split('.').length);
+            let readability = 10 - (avgWordsPerSentence / 5);
+            readability = Math.max(Math.min(readability, 10), 1);
+            document.getElementById('readability').textContent = readability.toFixed(1);
+            
+            // Calculate attention level
+            const totalLength = title.length + body.length;
+            let attention = 'Medium';
+            if (priority === 'high' && totalLength < 80) attention = 'High';
+            else if (priority === 'low' || totalLength > 150) attention = 'Low';
+            document.getElementById('attention').textContent = attention;
+        }
+
+        // Simulate real-time notifications
+        function simulateRealTimeNotifications() {
+            const realTimeMessages = [
+                {title: "Breaking News", body: "Major update in the tech industry just announced.", icon: "📰", color: "#e74c3c"},
+                {title: "Weather Alert", body: "Rain expected in your area within the next hour.", icon: "🌧️", color: "#3498db"},
+                {title: "Friend Request", body: "Alex wants to connect with you on the platform.", icon: "👥", color: "#2ecc71"},
+                {title: "Sale Alert", body: "Your wishlist item is now 40% off! Limited time offer.", icon: "🛒", color: "#f39c12"}
+            ];
+            
+            setInterval(() => {
+                if (Math.random() < 0.3) { // 30% chance every 10 seconds
+                    const randomMsg = realTimeMessages[Math.floor(Math.random() * realTimeMessages.length)];
+                    const notification = createNotificationElement({
+                        id: ++currentNotificationId,
+                        appName: "Live Demo",
+                        title: randomMsg.title,
+                        body: randomMsg.body,
+                        icon: randomMsg.icon,
+                        color: randomMsg.color,
+                        style: selectedStyle,
+                        actionType: 'view-reply',
+                        timestamp: new Date()
+                    });
+                    
+                    const container = document.getElementById('notificationsArea');
+                    container.insertBefore(notification, container.firstChild);
+                    
+                    // Keep only last 5 notifications
+                    while (container.children.length > 5) {
+                        container.removeChild(container.lastChild);
+                    }
+                }
+            }, 10000); // Check every 10 seconds
+        }
+
+        // Advanced interaction features
+        function addAdvancedInteractions() {
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('notification-action')) {
+                    const notification = e.target.closest('.notification');
+                    
+                    // Animate action feedback
+                    e.target.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        e.target.style.transform = 'scale(1)';
+                    }, 150);
+                    
+                    // Simulate action result
+                    const actionText = e.target.textContent;
+                    const tempFeedback = document.createElement('div');
+                    tempFeedback.textContent = `${actionText} pressed`;
+                    tempFeedback.style.cssText = `
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        background: rgba(0,0,0,0.8);
+                        color: white;
+                        padding: 8px 16px;
+                        border-radius: 20px;
+                        font-size: 12px;
+                        z-index: 1000;
+                        animation: fadeInOut 2s ease-in-out;
+                    `;
+                    
+                    notification.style.position = 'relative';
+                    notification.appendChild(tempFeedback);
+                    
+                    setTimeout(() => {
+                        if (tempFeedback.parentNode) {
+                            tempFeedback.parentNode.removeChild(tempFeedback);
+                        }
+                    }, 2000);
+                }
+                
+                // Swipe to dismiss simulation
+                if (e.target.closest('.notification')) {
+                    const notification = e.target.closest('.notification');
+                    let startX, startY, isDragging = false;
+                    
+                    notification.addEventListener('mousedown', function(e) {
+                        startX = e.clientX;
+                        startY = e.clientY;
+                        isDragging = true;
+                    });
+                    
+                    notification.addEventListener('mousemove', function(e) {
+                        if (!isDragging) return;
+                        
+                        const deltaX = e.clientX - startX;
+                        const deltaY = e.clientY - startY;
+                        
+                        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 20) {
+                            notification.style.transform = `translateX(${deltaX}px)`;
+                            notification.style.opacity = Math.max(0.3, 1 - Math.abs(deltaX) / 200);
+                        }
+                    });
+                    
+                    notification.addEventListener('mouseup', function(e) {
+                        if (!isDragging) return;
+                        isDragging = false;
+                        
+                        const deltaX = e.clientX - startX;
+                        
+                        if (Math.abs(deltaX) > 100) {
+                            // Dismiss notification
+                            notification.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+                            notification.style.transform = `translateX(${deltaX > 0 ? '100%' : '-100%'})`;
+                            notification.style.opacity = '0';
+                            
+                            setTimeout(() => {
+                                if (notification.parentNode) {
+                                    notification.parentNode.removeChild(notification);
+                                }
+                            }, 300);
+                        } else {
+                            // Snap back
+                            notification.style.transition = 'transform 0.2s ease, opacity 0.2s ease';
+                            notification.style.transform = 'translateX(0)';
+                            notification.style.opacity = '1';
+                        }
+                        
+                        setTimeout(() => {
+                            notification.style.transition = '';
+                        }, 300);
+                    });
+                }
+            });
+        }
+
+        // Export functionality
+        function exportDesign() {
+            const designData = {
+                appName: document.getElementById('appName').value,
+                title: document.getElementById('notificationTitle').value,
+                body: document.getElementById('notificationBody').value,
+                icon: selectedIcon,
+                color: selectedColor,
+                style: selectedStyle,
+                actionType: document.getElementById('actionType').value,
+                priority: document.getElementById('priority').value,
+                settings: {
+                    sound: document.getElementById('enableSound').checked,
+                    vibration: document.getElementById('enableVibration').checked,
+                    badge: document.getElementById('showBadge').checked
+                },
+                metrics: {
+                    engagement: document.getElementById('engagementRate').textContent,
+                    readability: document.getElementById('readability').textContent,
+                    attention: document.getElementById('attention').textContent
+                }
+            };
+            
+            const exportBlob = new Blob([JSON.stringify(designData, null, 2)], {
+                type: 'application/json'
+            });
+            
+            const exportUrl = URL.createObjectURL(exportBlob);
+            const exportLink = document.createElement('a');
+            exportLink.href = exportUrl;
+            exportLink.download = 'notification-design.json';
+            exportLink.click();
+            
+            URL.revokeObjectURL(exportUrl);
+        }
+
+        // Add CSS animations for advanced interactions
+        const advancedStyles = document.createElement('style');
+        advancedStyles.textContent = `
+            @keyframes fadeInOut {
+                0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+                20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+                80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+                100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+            }
+            
+            .notification {
+                user-select: none;
+                cursor: grab;
+            }
+            
+            .notification:active {
+                cursor: grabbing;
+            }
+            
+            .notification-action {
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .notification-action::before {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 0;
+                height: 0;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.3);
+                transform: translate(-50%, -50%);
+                transition: width 0.3s ease, height 0.3s ease;
+            }
+            
+            .notification-action:hover::before {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .phone-mockup::before {
+                content: '';
+                position: absolute;
+                top: 10px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 60px;
+                height: 4px;
+                background: #333;
+                border-radius: 2px;
+                z-index: 10;
+            }
+            
+            .metrics-panel .metric-card:nth-child(1) {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            }
+            
+            .metrics-panel .metric-card:nth-child(2) {
+                background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            }
+            
+            .metrics-panel .metric-card:nth-child(3) {
+                background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            }
+            
+            .export-btn {
+                position: fixed;
+                bottom: 30px;
+                right: 30px;
+                width: 60px;
+                height: 60px;
+                background: linear-gradient(135deg, #667eea, #764ba2);
+                border-radius: 50%;
+                border: none;
+                color: white;
+                font-size: 24px;
+                cursor: pointer;
+                box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+                transition: all 0.3s ease;
+                z-index: 1000;
+            }
+            
+            .export-btn:hover {
+                transform: scale(1.1);
+                box-shadow: 0 12px 35px rgba(102, 126, 234, 0.6);
+            }
+        `;
+        document.head.appendChild(advancedStyles);
+
+        // Add export button
+        const exportBtn = document.createElement('button');
+        exportBtn.className = 'export-btn';
+        exportBtn.innerHTML = '💾';
+        exportBtn.title = 'Export Design';
+        exportBtn.onclick = exportDesign;
+        document.body.appendChild(exportBtn);
+
+        // Initialize advanced features
+        setTimeout(() => {
+            addAdvancedInteractions();
+            simulateRealTimeNotifications();
+        }, 1000);
+
+    </script>
+</body>
+</html>
