@@ -1,0 +1,1616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification UX Designer Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            max-width: 1400px;
+            margin: 0 auto;
+            min-height: 100vh;
+            gap: 40px;
+            padding: 40px 20px;
+        }
+
+        .designer-panel {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-height: calc(100vh - 80px);
+            overflow-y: auto;
+        }
+
+        .phone-preview {
+            flex: 0 0 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 32px;
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 16px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: #fff;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .icon-selector {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .icon-option {
+            width: 48px;
+            height: 48px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #fff;
+        }
+
+        .icon-option:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .icon-option.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .color-picker-group {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .color-option.selected {
+            border-color: #333;
+            transform: scale(1.1);
+        }
+
+        .phone-mockup {
+            width: 320px;
+            height: 640px;
+            background: #1c1c1e;
+            border-radius: 40px;
+            padding: 20px 8px;
+            position: relative;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            border-radius: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .time {
+            font-weight: 700;
+        }
+
+        .status-icons {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .notification-area {
+            position: absolute;
+            top: 60px;
+            left: 16px;
+            right: 16px;
+        }
+
+        .notification {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .notification-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .notification-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: white;
+        }
+
+        .notification-meta {
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .app-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .time-ago {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            font-size: 15px;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .notification-body {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .notification-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .action-button {
+            flex: 1;
+            padding: 8px 16px;
+            border: 1px solid #e1e5e9;
+            border-radius: 8px;
+            background: #f8f9fa;
+            color: #333;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .action-button:hover {
+            background: #e9ecef;
+        }
+
+        .action-button.primary {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .style-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .style-tab {
+            padding: 8px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .style-tab.active {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .preview-controls {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .control-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 12px;
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .control-button:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+
+        .control-button.secondary {
+            background: #6c757d;
+        }
+
+        .control-button.secondary:hover {
+            background: #5a6268;
+        }
+
+        .advanced-options {
+            border-top: 1px solid #e1e5e9;
+            padding-top: 24px;
+            margin-top: 24px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 28px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 28px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #667eea;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+
+        .toggle-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .feature-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: 8px;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .phone-preview {
+                flex: none;
+                align-self: center;
+            }
+        }
+
+        .export-panel {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 20px;
+        }
+
+        .export-code {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 12px;
+            border-radius: 8px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            margin-top: 8px;
+        }
+
+        /* Enhanced UI/UX Improvements */
+        .designer-panel::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .designer-panel::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 4px;
+        }
+
+        .designer-panel::-webkit-scrollbar-thumb {
+            background: rgba(102, 126, 234, 0.3);
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .designer-panel::-webkit-scrollbar-thumb:hover {
+            background: rgba(102, 126, 234, 0.6);
+        }
+
+        .form-group input:hover,
+        .form-group select:hover,
+        .form-group textarea:hover {
+            border-color: #b0bec5;
+            background: #fafbfc;
+        }
+
+        .icon-option {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .icon-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .icon-option:hover::before {
+            left: 100%;
+        }
+
+        .color-option {
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .color-option::after {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, #667eea, #764ba2, #f093fb, #667eea);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .color-option.selected::after {
+            opacity: 1;
+            animation: rotate 2s linear infinite;
+        }
+
+        @keyframes rotate {
+            to { transform: rotate(360deg); }
+        }
+
+        .notification {
+            position: relative;
+            transform-origin: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .notification:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        .notification::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            border-radius: 16px;
+            pointer-events: none;
+        }
+
+        .control-button {
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.25);
+        }
+
+        .control-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .control-button:hover::before {
+            left: 100%;
+        }
+
+        .control-button:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .style-tab {
+            position: relative;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .style-tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .style-tab:hover::before {
+            left: 100%;
+        }
+
+        .phone-mockup {
+            position: relative;
+            transition: all 0.4s ease;
+        }
+
+        .phone-mockup::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: conic-gradient(from 0deg, #667eea, #764ba2, #f093fb, #43e97b, #667eea);
+            border-radius: 50px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+            animation: rotate 3s linear infinite;
+        }
+
+        .phone-mockup:hover::before {
+            opacity: 0.3;
+        }
+
+        .phone-mockup:hover {
+            transform: translateY(-8px) rotateY(5deg);
+        }
+
+        .status-bar {
+            position: relative;
+        }
+
+        .status-bar::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            right: 20px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        }
+
+        .toggle-switch .slider {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .toggle-switch:hover .slider {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-badge {
+            position: relative;
+            overflow: hidden;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .export-panel {
+            border: 1px solid #e1e5e9;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .export-panel::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #667eea, #764ba2, #f093fb, #667eea);
+            border-radius: 14px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+            animation: borderGlow 3s linear infinite;
+        }
+
+        .export-panel:hover::before {
+            opacity: 0.6;
+        }
+
+        @keyframes borderGlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .action-button {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s ease, height 0.3s ease;
+        }
+
+        .action-button:hover::before {
+            width: 200px;
+            height: 200px;
+        }
+
+        .notification-area {
+            perspective: 1000px;
+        }
+
+        .loading-shimmer {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+        }
+
+        .neon-glow {
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.5),
+                        0 0 40px rgba(102, 126, 234, 0.3),
+                        0 0 60px rgba(102, 126, 234, 0.1);
+        }
+
+        .floating-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .micro-interaction {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .micro-interaction:hover {
+            transform: scale(1.05);
+        }
+
+        .micro-interaction:active {
+            transform: scale(0.95);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .morphism-card {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .interactive-feedback:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .interactive-feedback:active {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        /* Next-Level UI/UX Enhancements */
+        .container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.05) 0%, transparent 70%);
+            animation: breathe 4s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes breathe {
+            0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.3; }
+            50% { transform: scale(1.1) rotate(180deg); opacity: 0.1; }
+        }
+
+        .designer-panel {
+            position: relative;
+            z-index: 10;
+        }
+
+        .designer-panel::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.03), transparent);
+            animation: scan 8s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+        }
+
+        .form-group:focus-within::before {
+            width: 100%;
+        }
+
+        .form-group label {
+            position: relative;
+            display: inline-block;
+        }
+
+        .form-group label::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+        }
+
+        .form-group:focus-within label::after {
+            width: 100%;
+        }
+
+        input, select, textarea {
+            position: relative;
+            z-index: 1;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+        }
+
+        .icon-selector {
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            padding: 16px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .icon-option {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .icon-option:hover {
+            background: rgba(102, 126, 234, 0.1);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+        }
+
+        .icon-option.selected {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            animation: selectedPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes selectedPulse {
+            0%, 100% { box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4); }
+            50% { box-shadow: 0 12px 35px rgba(102, 126, 234, 0.6); }
+        }
+
+        .color-picker-group {
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            padding: 16px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .color-option {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .color-option:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            animation: colorPulse 1s ease-in-out;
+        }
+
+        @keyframes colorPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .phone-mockup {
+            background: linear-gradient(135deg, #1c1c1e, #2c2c2e);
+            position: relative;
+        }
+
+        .phone-mockup::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: #333;
+            border-radius: 2px;
+        }
+
+        .phone-screen {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .phone-screen::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        }
+
+        .status-bar {
+            background: rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(20px);
+        }
+
+        .status-icons span {
+            transition: all 0.3s ease;
+        }
+
+        .status-icons span:hover {
+            transform: scale(1.2);
+            filter: brightness(1.5);
+        }
+
+        .notification {
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .notification::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+        }
+
+        .notification-icon {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .notification-icon::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: iconSpin 3s linear infinite;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .notification:hover .notification-icon::before {
+            opacity: 1;
+        }
+
+        @keyframes iconSpin {
+            to { transform: rotate(360deg); }
+        }
+
+        .notification-title {
+            position: relative;
+        }
+
+        .notification-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+        }
+
+        .notification:hover .notification-title::after {
+            width: 100%;
+        }
+
+        .action-button {
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .action-button.primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .action-button.primary:hover {
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .style-tab {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .style-tab:hover {
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .style-tab.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .control-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            position: relative;
+        }
+
+        .control-button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
+            border-radius: 12px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .control-button:hover::after {
+            opacity: 1;
+        }
+
+        .toggle-switch {
+            position: relative;
+        }
+
+        .slider {
+            position: relative;
+        }
+
+        .slider::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: conic-gradient(from 0deg, #667eea, #764ba2, #f093fb, #667eea);
+            border-radius: 30px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+            animation: rotate 2s linear infinite;
+        }
+
+        input:checked + .slider::after {
+            opacity: 0.5;
+        }
+
+        .advanced-options {
+            background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-badge {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: badgeShine 2s infinite;
+        }
+
+        @keyframes badgeShine {
+            0% { left: -100%; }
+            50% { left: 100%; }
+            100% { left: 100%; }
+        }
+
+        .export-panel {
+            position: relative;
+        }
+
+        .export-code {
+            position: relative;
+            background: linear-gradient(135deg, #2d3748, #1a202c);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .export-code:hover {
+            border-color: rgba(102, 126, 234, 0.5);
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
+        }
+
+        .time {
+            position: relative;
+        }
+
+        .time::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 4px;
+            height: 4px;
+            background: #00ff00;
+            border-radius: 50%;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        /* Accessibility Enhancements */
+        @media (prefers-reduced-motion: reduce) {
+            *, ::before, ::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Focus indicators for accessibility */
+        .icon-option:focus,
+        .color-option:focus,
+        .style-tab:focus,
+        .control-button:focus {
+            outline: 2px solid #667eea;
+            outline-offset: 2px;
+        }
+
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            .designer-panel {
+                border: 2px solid;
+            }
+            
+            .notification {
+                border: 2px solid;
+            }
+        }
+
+        /* Dark mode enhancements */
+        @media (prefers-color-scheme: dark) {
+            .designer-panel {
+                background: rgba(30, 30, 30, 0.95);
+                color: #fff;
+            }
+            
+            input, select, textarea {
+                background: rgba(40, 40, 40, 0.8);
+                color: #fff;
+                border-color: rgba(255, 255, 255, 0.2);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+                    <div class="designer-panel floating-animation">
+            <h1 class="gradient-text">Notification UX Designer</h1>
+            <p class="subtitle">Create stunning mobile notifications with precision and style</p>
+
+            <div class="style-tabs">
+                <div class="style-tab active" data-style="ios">iOS Style</div>
+                <div class="style-tab" data-style="material">Material</div>
+                <div class="style-tab" data-style="custom">Custom</div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>App Name</label>
+                    <input type="text" id="appName" value="MyApp" placeholder="Enter app name">
+                </div>
+                <div class="form-group">
+                    <label>Time Display</label>
+                    <select id="timeDisplay">
+                        <option value="now">now</option>
+                        <option value="1m">1m ago</option>
+                        <option value="5m">5m ago</option>
+                        <option value="1h">1h ago</option>
+                        <option value="custom">Custom</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>App Icon</label>
+                <div class="icon-selector">
+                    <div class="icon-option selected micro-interaction" data-icon="📱">📱</div>
+                    <div class="icon-option micro-interaction" data-icon="📧">📧</div>
+                    <div class="icon-option micro-interaction" data-icon="💬">💬</div>
+                    <div class="icon-option micro-interaction" data-icon="📷">📷</div>
+                    <div class="icon-option micro-interaction" data-icon="🎵">🎵</div>
+                    <div class="icon-option micro-interaction" data-icon="🏃">🏃</div>
+                    <div class="icon-option micro-interaction" data-icon="🍕">🍕</div>
+                    <div class="icon-option micro-interaction" data-icon="🚗">🚗</div>
+                    <div class="icon-option micro-interaction" data-icon="💰">💰</div>
+                    <div class="icon-option micro-interaction" data-icon="🎮">🎮</div>
+                    <div class="icon-option micro-interaction" data-icon="☁️">☁️</div>
+                    <div class="icon-option micro-interaction" data-icon="⚡">⚡</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Icon Background Color</label>
+                <div class="color-picker-group">
+                    <div class="color-option selected" style="background: #667eea" data-color="#667eea"></div>
+                    <div class="color-option" style="background: #f093fb" data-color="#f093fb"></div>
+                    <div class="color-option" style="background: #4facfe" data-color="#4facfe"></div>
+                    <div class="color-option" style="background: #43e97b" data-color="#43e97b"></div>
+                    <div class="color-option" style="background: #fa709a" data-color="#fa709a"></div>
+                    <div class="color-option" style="background: #ffecd2" data-color="#ffecd2"></div>
+                    <div class="color-option" style="background: #ff9a9e" data-color="#ff9a9e"></div>
+                    <div class="color-option" style="background: #a8edea" data-color="#a8edea"></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Notification Title</label>
+                <input type="text" id="notificationTitle" value="New Message" placeholder="Enter notification title">
+            </div>
+
+            <div class="form-group">
+                <label>Notification Body</label>
+                <textarea id="notificationBody" placeholder="Enter your notification message...">You have a new message waiting for you. Tap to view details.</textarea>
+            </div>
+
+            <div class="advanced-options">
+                <h3 style="margin-bottom: 16px; color: #333;">Advanced Features <span class="feature-badge">Pro</span></h3>
+                
+                <div class="toggle-group">
+                    <label>Show Action Buttons</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="showActions" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="form-row" id="actionButtonsRow">
+                    <div class="form-group">
+                        <label>Primary Action</label>
+                        <input type="text" id="primaryAction" value="Reply" placeholder="Primary action">
+                    </div>
+                    <div class="form-group">
+                        <label>Secondary Action</label>
+                        <input type="text" id="secondaryAction" value="Dismiss" placeholder="Secondary action">
+                    </div>
+                </div>
+
+                <div class="toggle-group">
+                    <label>Critical Alert</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="criticalAlert">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="toggle-group">
+                    <label>Grouped Notification</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="groupedNotification">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label>Notification Priority</label>
+                    <select id="priority">
+                        <option value="normal">Normal</option>
+                        <option value="high">High</option>
+                        <option value="urgent">Urgent</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="preview-controls">
+                <button class="control-button micro-interaction neon-glow" onclick="previewNotification()">Preview Animation</button>
+                <button class="control-button secondary micro-interaction" onclick="exportCode()">Export Code</button>
+            </div>
+
+            <div class="export-panel morphism-card" id="exportPanel" style="display: none;">
+                <h4>iOS Swift Code</h4>
+                <div class="export-code" id="exportCode"></div>
+            </div>
+        </div>
+
+        <div class="phone-preview">
+            <div class="phone-mockup">
+                <div class="phone-screen">
+                    <div class="status-bar">
+                        <span class="time">9:41</span>
+                        <div class="status-icons">
+                            <span>📶</span>
+                            <span>📶</span>
+                            <span>🔋</span>
+                        </div>
+                    </div>
+                    <div class="notification-area" id="notificationArea">
+                        <div class="notification" id="previewNotification">
+                            <div class="notification-header">
+                                <div class="notification-icon" id="previewIcon" style="background: #667eea;">📱</div>
+                                <div class="notification-meta">
+                                    <div class="app-name" id="previewAppName">MyApp</div>
+                                    <div class="time-ago" id="previewTime">now</div>
+                                </div>
+                            </div>
+                            <div class="notification-title" id="previewTitle">New Message</div>
+                            <div class="notification-body" id="previewBody">You have a new message waiting for you. Tap to view details.</div>
+                            <div class="notification-actions" id="previewActions">
+                                <button class="action-button" id="previewSecondaryAction">Dismiss</button>
+                                <button class="action-button primary" id="previewPrimaryAction">Reply</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentIcon = '📱';
+        let currentColor = '#667eea';
+        let notificationCount = 0;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updatePreview();
+            bindEvents();
+        });
+
+        function bindEvents() {
+            // Form inputs
+            document.getElementById('appName').addEventListener('input', updatePreview);
+            document.getElementById('notificationTitle').addEventListener('input', updatePreview);
+            document.getElementById('notificationBody').addEventListener('input', updatePreview);
+            document.getElementById('timeDisplay').addEventListener('change', updatePreview);
+            document.getElementById('primaryAction').addEventListener('input', updatePreview);
+            document.getElementById('secondaryAction').addEventListener('input', updatePreview);
+            document.getElementById('showActions').addEventListener('change', updatePreview);
+            document.getElementById('criticalAlert').addEventListener('change', updatePreview);
+            document.getElementById('groupedNotification').addEventListener('change', updatePreview);
+            document.getElementById('priority').addEventListener('change', updatePreview);
+
+            // Icon selection
+            document.querySelectorAll('.icon-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.icon-option').forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    currentIcon = this.dataset.icon;
+                    updatePreview();
+                });
+            });
+
+            // Color selection
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    currentColor = this.dataset.color;
+                    updatePreview();
+                });
+            });
+
+            // Style tabs
+            document.querySelectorAll('.style-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('.style-tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    updatePreview();
+                });
+            });
+        }
+
+        function updatePreview() {
+            const appName = document.getElementById('appName').value || 'MyApp';
+            const title = document.getElementById('notificationTitle').value || 'Notification';
+            const body = document.getElementById('notificationBody').value || 'This is your notification message.';
+            const timeDisplay = document.getElementById('timeDisplay').value;
+            const showActions = document.getElementById('showActions').checked;
+            const primaryAction = document.getElementById('primaryAction').value || 'Accept';
+            const secondaryAction = document.getElementById('secondaryAction').value || 'Dismiss';
+            const criticalAlert = document.getElementById('criticalAlert').checked;
+            const grouped = document.getElementById('groupedNotification').checked;
+            
+            // Update preview elements
+            document.getElementById('previewAppName').textContent = appName;
+            document.getElementById('previewTitle').textContent = title;
+            document.getElementById('previewBody').textContent = body;
+            document.getElementById('previewIcon').textContent = currentIcon;
+            document.getElementById('previewIcon').style.background = currentColor;
+            document.getElementById('previewTime').textContent = timeDisplay === 'custom' ? 'now' : timeDisplay;
+            document.getElementById('previewPrimaryAction').textContent = primaryAction;
+            document.getElementById('previewSecondaryAction').textContent = secondaryAction;
+            
+            // Show/hide actions
+            document.getElementById('previewActions').style.display = showActions ? 'flex' : 'none';
+            document.getElementById('actionButtonsRow').style.display = showActions ? 'flex' : 'none';
+            
+            // Critical alert styling
+            const notification = document.getElementById('previewNotification');
+            if (criticalAlert) {
+                notification.style.border = '2px solid #ff4757';
+                notification.style.background = 'rgba(255, 71, 87, 0.1)';
+            } else {
+                notification.style.border = '1px solid rgba(255, 255, 255, 0.3)';
+                notification.style.background = 'rgba(255, 255, 255, 0.95)';
+            }
+            
+            // Grouped notification
+            if (grouped) {
+                createGroupedNotifications();
+            } else {
+                showSingleNotification();
+            }
+        }
+
+        function createGroupedNotifications() {
+            const area = document.getElementById('notificationArea');
+            const appName = document.getElementById('appName').value || 'MyApp';
+            
+            area.innerHTML = `
+                <div class="notification" style="margin-bottom: 2px;">
+                    <div class="notification-header">
+                        <div class="notification-icon" style="background: ${currentColor};">${currentIcon}</div>
+                        <div class="notification-meta">
+                            <div class="app-name">${appName} (3)</div>
+                            <div class="time-ago">now</div>
+                        </div>
+                    </div>
+                    <div class="notification-title">Multiple notifications</div>
+                    <div class="notification-body">You have 3 new notifications from ${appName}</div>
+                </div>
+                <div class="notification" style="margin-left: 16px; margin-top: -8px; transform: scale(0.95); opacity: 0.8;"></div>
+                <div class="notification" style="margin-left: 32px; margin-top: -8px; transform: scale(0.9); opacity: 0.6;"></div>
+            `;
+        }
+
+        function showSingleNotification() {
+            const area = document.getElementById('notificationArea');
+            area.innerHTML = `
+                <div class="notification" id="previewNotification">
+                    <div class="notification-header">
+                        <div class="notification-icon" id="previewIcon" style="background: ${currentColor};">${currentIcon}</div>
+                        <div class="notification-meta">
+                            <div class="app-name" id="previewAppName">${document.getElementById('appName').value || 'MyApp'}</div>
+                            <div class="time-ago" id="previewTime">${document.getElementById('timeDisplay').value}</div>
+                        </div>
+                    </div>
+                    <div class="notification-title" id="previewTitle">${document.getElementById('notificationTitle').value || 'Notification'}</div>
+                    <div class="notification-body" id="previewBody">${document.getElementById('notificationBody').value || 'This is your notification message.'}</div>
+                    <div class="notification-actions" id="previewActions" style="display: ${document.getElementById('showActions').checked ? 'flex' : 'none'};">
+                        <button class="action-button" id="previewSecondaryAction">${document.getElementById('secondaryAction').value || 'Dismiss'}</button>
+                        <button class="action-button primary" id="previewPrimaryAction">${document.getElementById('primaryAction').value || 'Accept'}</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function previewNotification() {
+            notificationCount++;
+            const area = document.getElementById('notificationArea');
+            const newNotification = document.createElement('div');
+            newNotification.className = 'notification';
+            newNotification.style.animationDelay = '0.1s';
+            
+            newNotification.innerHTML = `
+                <div class="notification-header">
+                    <div class="notification-icon" style="background: ${currentColor};">${currentIcon}</div>
+                    <div class="notification-meta">
+                        <div class="app-name">Live Preview #${notificationCount}</div>
+                        <div class="time-ago">just now</div>
+                    </div>
+                </div>
+                <div class="notification-title">Animation Test</div>
+                <div class="notification-body">This demonstrates the notification animation behavior in real-time.</div>
+            `;
+            
+            area.appendChild(newNotification);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                if (newNotification.parentNode) {
+                    newNotification.style.animation = 'slideIn 0.3s ease-out reverse';
+                    setTimeout(() => {
+                        newNotification.remove();
+                    }, 300);
+                }
+            }, 3000);
+        }
+
+        function exportCode() {
+            const appName = document.getElementById('appName').value || 'MyApp';
+            const title = document.getElementById('notificationTitle').value || 'Notification';
+            const body = document.getElementById('notificationBody').value || 'This is your notification message.';
+            const showActions = document.getElementById('showActions').checked;
+            const criticalAlert = document.getElementById('criticalAlert').checked;
+            
+            const swiftCode = `
+// iOS Notification Code
+import UserNotifications
+
+let content = UNMutableNotificationContent()
+content.title = "${title}"
+content.body = "${body}"
+content.sound = ${criticalAlert ? 'UNNotificationSound.defaultCritical' : 'UNNotificationSound.default'}
+${showActions ? `
+// Add action buttons
+let replyAction = UNNotificationAction(
+    identifier: "REPLY_ACTION",
+    title: "${document.getElementById('primaryAction').value || 'Reply'}",
+    options: [.foreground]
+)
+let dismissAction = UNNotificationAction(
+    identifier: "DISMISS_ACTION", 
+    title: "${document.getElementById('secondaryAction').value || 'Dismiss'}",
+    options: []
+)
+let category = UNNotificationCategory(
+    identifier: "MESSAGE_CATEGORY",
+    actions: [replyAction, dismissAction],
+    intentIdentifiers: [],
+    options: []
+)
+UNUserNotificationCenter.current().setNotificationCategories([category])
+content.categoryIdentifier = "MESSAGE_CATEGORY"` : ''}
+
+let request = UNNotificationRequest(
+    identifier: UUID().uuidString,
+    content: content,
+    trigger: UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+)
+
+UNUserNotificationCenter.current().add(request)`;
+
+            document.getElementById('exportCode').textContent = swiftCode;
+            document.getElementById('exportPanel').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
